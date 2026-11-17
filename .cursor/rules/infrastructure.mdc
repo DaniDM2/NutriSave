@@ -1,0 +1,31 @@
+---
+description: Adapters — Neuron, DOMPDF, Eloquent y jobs implementan puertos de Domain.
+globs: app/Infrastructure/**/*.php,app/Models/**/*.php,app/Providers/DomainServiceProvider.php
+alwaysApply: false
+---
+
+# Infrastructure
+
+Traduce el mundo externo a VOs de Domain. `final class X implements Puerto`.
+
+- Agentes Neuron solo en `app/Infrastructure/Ai/Neuron`. El adapter (`NeuronAiAgent`) es lo único que ve Application.
+- Eloquent en `app/Models`. Repos en `app/Infrastructure/Persistence/Eloquent`.
+- Jobs en `app/Infrastructure/Queue`: `handle()` llama a un caso de uso, no al SDK.
+- `config()`, facades y SDKs: solo aquí. Mapea excepciones del SDK a `DomainException`.
+- Nuevo adapter → bind en `DomainServiceProvider` (`Puerto::class` → `Adapter::class`). No binds en controladores.
+
+```php
+// ❌ Livewire o caso de uso instanciando Neuron
+$state = app(NutritionAssistantAgent::class)->chat(new UserMessage($prompt));
+
+// ✅ Adapter
+final class NeuronAiAgent implements AiAgent
+{
+    public function chat(string $prompt): AiMessage
+    {
+        $state = $this->agent->chat(new UserMessage($prompt));
+
+        return new AiMessage($state->getMessage()?->getContent() ?? '');
+    }
+}
+```

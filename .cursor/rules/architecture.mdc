@@ -1,0 +1,29 @@
+---
+description: Onion, SOLID y límites de capas de NutriSave. Aplica en cada cambio de código.
+alwaysApply: true
+---
+
+# Arquitectura
+
+Dependencias hacia adentro. Domain no importa Laravel, Neuron, DOMPDF, Livewire ni Eloquent.
+
+| Capa | Vive en | Hace | No hace |
+| --- | --- | --- | --- |
+| Domain | `app/Domain` | Contratos, VOs, excepciones, reglas | I/O, facades, HTTP, SDK |
+| Application | `app/Application` | Casos de uso sobre puertos | Eloquent, Neuron, Blade |
+| Infrastructure | `app/Infrastructure`, `app/Models` | Adapters, jobs, repos Eloquent | Reglas de negocio nuevas |
+| Presentation | `app/Livewire`, `app/Http`, Blade, `routes` | Validar, llamar casos de uso, pintar | Fórmulas, prompts, SQL |
+
+Bindings puerto → adapter solo en `DomainServiceProvider`.
+
+SOLID aquí, no en abstracto:
+
+- **SRP:** un caso de uso, un adapter, un flujo Livewire.
+- **OCP:** otro proveedor de IA o PDF = otro adapter, no un `if` en Domain/Application.
+- **LSP:** un fake de `AiAgent` o `PdfGenerator` debe poder sustituir al adapter real.
+- **ISP:** contratos pequeños (`AiAgent`, `PdfGenerator`). No un puerto “hace todo”.
+- **DIP:** Application y Domain dependen de contratos. Presentation inyecta casos de uso.
+
+PHP: `declare(strict_types=1);`, constructor promotion, tipos explícitos. `final` en VOs y adapters.
+
+TDD: test que falla → mínimo código en Domain/Application → refactor sin cambiar tests. No hay clase de producción nueva sin un test rojo primero. Verde = ese test pasa; no implementes el resto de la fase.

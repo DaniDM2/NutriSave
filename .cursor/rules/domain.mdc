@@ -1,0 +1,26 @@
+---
+description: Capa Domain — contratos, VOs inmutables, excepciones. Sin Laravel ni SDKs.
+globs: app/Domain/**/*.php
+alwaysApply: false
+---
+
+# Domain
+
+PHP puro. Prohibido: `Illuminate\`, `Livewire\`, `NeuronAI\`, `Barryvdh\`, `App\Models`, `App\Infrastructure`, facades, `config()`, `env()`.
+
+- Contratos en `App\Domain\<Ctx>\Contracts`. Un puerto, una capacidad.
+- VOs en `ValueObjects`: `final readonly class`, invariantes en el constructor.
+- Excepciones: `extends DomainException`. Una clase por fallo de negocio.
+- Cálculos de negocio (TDEE, IMC, macros) aquí, no en el LLM ni en Livewire.
+- Cuando exista persistencia de dominio: interfaz de repositorio aquí, implementación Eloquent fuera.
+
+```php
+// ❌ Domain conociendo el SDK
+public function chat(string $prompt): UserMessage {}
+
+// ✅ Puerto + VO
+interface AiAgent
+{
+    public function chat(string $prompt): AiMessage;
+}
+```

@@ -1,0 +1,35 @@
+---
+description: Livewire, HTTP y Blade — finos. Validan y delegan en casos de uso.
+globs: app/Livewire/**/*.php,app/Http/**/*.php,resources/views/**/*.blade.php,routes/**/*.php
+alwaysApply: false
+---
+
+# Presentation
+
+Inyecta casos de uso de Application. No inyectes `AiAgent`, Neuron, Eloquent ni generadores PDF concretos.
+
+- Livewire: estado + `validate()` + llamar al caso de uso. Captura `DomainException` concretas para `status`/errores.
+- HTTP: un método, un caso de uso, respuesta. Sin lógica de dieta/TDEE.
+- Blade: pintar. Sin cálculos de negocio ni llamadas a IA.
+- Auth prevista: Fortify + Livewire 4, no Jetstream.
+- No mezcles generación de plan, subida de fotos y perfil en un solo componente.
+
+```php
+// ❌
+public function askAssistant(): void
+{
+    $this->reply = NutritionAssistantAgent::make()->chat($this->prompt);
+}
+
+// ✅
+public function askAssistant(ChatWithAssistant $chat): void
+{
+    $this->validate(['prompt' => ['required', 'string', 'max:2000']]);
+
+    try {
+        $this->reply = $chat->handle($this->prompt)->content;
+    } catch (AiProviderNotConfigured $exception) {
+        $this->status = $exception->getMessage();
+    }
+}
+```

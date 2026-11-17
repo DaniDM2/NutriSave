@@ -1,0 +1,33 @@
+---
+description: TDD y tests — rojo-verde-refactor, fakes de puertos, sin Gemini real.
+globs: tests/**/*.php
+alwaysApply: false
+---
+
+# Tests
+
+TDD: escribe el test primero (rojo), luego el mínimo en Domain/Application (verde), luego refactor. Un test por comportamiento. Nombre `test_it_...` / `test_<hecho>` (`test_it_returns_cached_plan_when_hash_matches`). Para en verde: no implementes la fase entera.
+
+DIP se demuestra con fakes. Unit de Application/Domain: implementa el contrato a mano. Feature HTTP/Livewire: mockea el caso de uso si el I/O es irrelevante.
+
+- Prohibido llamar a Gemini/Neuron real en CI. No uses API keys en tests.
+- No hace falta Docker: PHPUnit + SQLite `:memory:` (`phpunit.xml`).
+- Nuevos puertos: añade aserción en `tests/Unit/Architecture/OnionBindingsTest.php`.
+- El PR incluye tests del trozo que toca, no de capas vecinas.
+
+```php
+// ✅ Fake del puerto (LSP)
+$agent = new class implements AiAgent {
+    public function chat(string $prompt): AiMessage
+    {
+        return new AiMessage('Respuesta a: '.$prompt);
+    }
+
+    public function isConfigured(): bool
+    {
+        return true;
+    }
+};
+
+$useCase = new ChatWithAssistant($agent);
+```

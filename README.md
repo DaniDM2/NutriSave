@@ -88,3 +88,6 @@ php artisan test
 ```
 
 Horizon necesita las extensiones `pcntl` y `posix`, disponibles en el contenedor `app`, no en PHP de Windows.
+
+
+**BORRAR ROADMAP.md al completarlo**

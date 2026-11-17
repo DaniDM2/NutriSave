@@ -1,0 +1,24 @@
+---
+description: Catálogo de casos de uso — contrato en markdown al crear o cambiar Application.
+globs: app/Application/**/*.php,docs/use-cases/**/*.md
+alwaysApply: false
+---
+
+# Use cases
+
+Cada clase en `app/Application` tiene `docs/use-cases/<ClassName>.md`. Crear o cambiar firma, puertos o excepciones → actualizar el doc en el mismo cambio.
+
+El markdown es el contrato (quién, cuándo, qué entra/sale). Los tests son la spec ejecutable. No copies `handle()` ni los tests.
+
+No documentes los de muestra (`ChatWithAssistant`, `GenerateDocument`) como producto; salen en `feat/0-03`. El primer doc real llega con el primer caso de uso de v1.
+
+```markdown
+# GenerateDietPlan
+- Actor: miembro del hogar
+- Trigger: Livewire “Generar dieta” / job
+- Input: householdId, inputHash, window, macros
+- Output: DietPlan (JSON + path PDF) o plan cacheado
+- Puertos: DietPlanRepository, AiAgent, PdfGenerator
+- Errores: MissingProfile, SnapshotExpired
+- Notas: mismo hash → no llamar a Gemini
+```

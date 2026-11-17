@@ -1,0 +1,35 @@
+---
+description: Clean code PHP en NutriSave — nombres, funciones pequeñas, tipos, early return.
+globs: app/**/*.php,tests/**/*.php
+alwaysApply: false
+---
+
+# Clean code
+
+Nombres que dicen qué es (VO, contrato) o qué hace (caso de uso). Inglés en código. Ubiquitous language del dominio: `Household`, `BodySnapshot`, `DietPlan`, no `Data`, `Manager`, `Helper`, `Util`.
+
+- Métodos cortos, un nivel de anidación. Early return / guard clauses.
+- Nada de `array<string, mixed>` cuando ya existe un VO o DTO.
+- Nada de comentarios que narran el código. PHPDoc solo para genéricos (`array<string, mixed>`).
+- Constructor promotion. Propiedades `readonly` salvo estado Livewire.
+- No tragues excepciones. Captura la de dominio concreta y traduce a UI.
+- No añadas capas “por si acaso”. Si el caso de uso solo delega, está bien hasta que orqueste de verdad.
+
+```php
+// ❌
+public function process($data)
+{
+    if ($data) {
+        if ($this->agent->isConfigured()) {
+            return $this->agent->chat($data);
+        }
+    }
+    return null;
+}
+
+// ✅
+public function handle(string $prompt): AiMessage
+{
+    return $this->agent->chat($prompt);
+}
+```

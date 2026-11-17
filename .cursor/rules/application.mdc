@@ -1,0 +1,41 @@
+---
+description: Casos de uso — orquestan puertos de Domain, sin I/O concreto.
+globs: app/Application/**/*.php
+alwaysApply: false
+---
+
+# Application
+
+Un caso de uso = una acción de negocio (`ChatWithAssistant`, `GenerateDocument`). Constructor: solo contratos de Domain (y otros casos de uso si hace falta).
+
+- Entrada: primitivos o VOs. Salida: VOs. Nunca modelos Eloquent ni tipos Neuron/DOMPDF.
+- Orquesta; no implementa HTTP, SQL, PDF ni prompts.
+- Un método de entrada claro (`handle`, o `sample` / `fromView` si hay varios inicios).
+- Sin `config()`, facades ni jobs. El job vive en Infrastructure y llama al caso de uso.
+- Clase nueva o cambio de firma/puertos/errores → `docs/use-cases/<ClassName>.md` en el mismo cambio.
+
+```php
+// ❌
+class GenerateDocument
+{
+    public function sample(): PdfDocument
+    {
+        return Pdf::loadView('pdf.sample', [])->output();
+    }
+}
+
+// ✅
+class GenerateDocument
+{
+    public function __construct(private readonly PdfGenerator $pdfGenerator) {}
+
+    public function sample(?DateTimeInterface $generatedAt = null): PdfDocument
+    {
+        $timestamp = $generatedAt ?? new DateTimeImmutable;
+
+        return $this->pdfGenerator->fromView('pdf.sample', [
+            'generatedAt' => $timestamp->format('Y-m-d H:i:s'),
+        ], 'nutrisave-muestra.pdf');
+    }
+}
+```
