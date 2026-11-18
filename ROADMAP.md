@@ -56,7 +56,7 @@ flowchart LR
 
 ## Cómo partir ramas y PRs
 
-Convención: `feat/<fase>-<nn>-<slug>` desde `main`. Un PR, un tema. Merge a `main` en orden (no stacked PRs). Objetivo de revisión: pocos archivos de un mismo tipo, no “dominio + migración + Livewire + agente + PDF” juntos.
+Convención: `feat/<fase>-<nn>-<slug>` desde `develop`. Un PR, un tema. Merge a `develop`en orden (no stacked PRs). Objetivo de revisión: pocos archivos de un mismo tipo, no “dominio + migración + Livewire + agente + PDF” juntos.
 
 Reglas:
 
