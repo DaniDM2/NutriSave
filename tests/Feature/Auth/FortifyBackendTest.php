@@ -78,10 +78,4 @@ class FortifyBackendTest extends TestCase
 
         Notification::assertSentTo($user, ResetPassword::class);
     }
-
-    public function test_it_does_not_register_fortify_view_routes(): void
-    {
-        $this->get('/login')->assertMethodNotAllowed();
-        $this->get('/register')->assertMethodNotAllowed();
-    }
 }

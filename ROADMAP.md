@@ -135,3 +135,17 @@ Ningún paquete nuevo, migración, agente ni pantalla hasta que se abra la prime
 - **diet_plans**: `household_id`, `input_hash`, días, JSON, path PDF, estado
 - **diet_plan_servings**: día / comida / alimento / miembro
 - **progress_analyses**, **emergency_meals**
+
+## Pendiente: tablas del esqueleto (revisar y decidir)
+
+Laravel y Neuron crean tablas que **hoy no usa NutriSave** con Redis (`SESSION_DRIVER`, `CACHE_STORE`, `QUEUE_CONNECTION`). No son dominio; son inercia del starter. Dejarlas hasta tener el PDF de dietas y el seguimiento; entonces decidir si se quedan (fallback de driver / features de Neuron) o se eliminan con una migración `drop`.
+
+| Tabla | Origen | Uso actual | Criterio |
+| --- | --- | --- | --- |
+| `sessions` | Laravel | Vacía (sesiones en Redis) | ¿Compromiso permanente con Redis? Si sí, se puede dropear. |
+| `cache`, `cache_locks` | Laravel | Vacías (caché en Redis) | Igual. La caché de planes v1 será `diet_plans.input_hash`, no esta tabla. |
+| `jobs`, `job_batches` | Laravel | Vacías (cola en Redis + Horizon) | Igual. `failed_jobs` **sí se usa**: no tocarla. |
+| `chat_messages` | Neuron | Vacía; chat libre fuera de v1 | ¿Algún agente usará historial Eloquent de Neuron? Si no, dropear y dejar de cargar `database/migrations/neuron`. |
+| `workflow_store` | Neuron | Vacía | ¿Workflows persistidos de Neuron, o solo jobs + `diet_plans`? Si lo segundo, dropear. |
+
+`users`, `password_reset_tokens` y `failed_jobs` se quedan. No mezclar este recorte con un PR de dominio o UI.
