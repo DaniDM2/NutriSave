@@ -19,4 +19,4 @@ Los tests en `tests/Unit/Application` son la spec ejecutable. Este catálogo no 
 
 Actualizar el markdown en el mismo cambio que crea o modifica la clase (firma, puertos, excepciones).
 
-`ChatWithAssistant` y `GenerateDocument` son esqueleto de demo; no tienen ficha aquí. Se documenta a partir del primer caso de uso de producto (Fase 1+).
+Se documenta a partir del primer caso de uso de producto (Fase 1+).

@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\PdfController;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Home;
+use App\Livewire\Dashboard;
 use Illuminate\Support\Facades\Route;
 
-Route::livewire('/', Home::class)->name('home');
-Route::get('/pdf/sample', [PdfController::class, 'sample'])->name('pdf.sample');
+Route::middleware('auth')->group(function () {
+    Route::livewire('/', Dashboard::class)->name('dashboard');
+});
 
 Route::middleware('guest')->group(function () {
     Route::livewire('/login', Login::class)->name('login');

@@ -61,6 +61,6 @@ class RegistrationTest extends TestCase
 
         $this->actingAs($user)
             ->get(route('register'))
-            ->assertRedirect(route('home'));
+            ->assertRedirect(route('dashboard'));
     }
 }
