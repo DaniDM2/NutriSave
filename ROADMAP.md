@@ -23,6 +23,7 @@ Se podrán retomar cuando existan el PDF de dietas y el seguimiento.
 - **PDF desde plantilla Blade + DOMPDF**, nunca generado por la IA.
 - **Auth:** Fortify + Livewire 4, sin Jetstream.
 - Un usuario, un hogar en v1. Invitación por email. Disclaimer: no es consejo médico.
+- **Identidad:** PKs `bigint` como `users.id`. Las asigna Postgres al insertar. Domain solo envuelve el id (`UserId`, `HouseholdId`); no genera UUID ni el siguiente entero. Un agregado nuevo puede ir sin id hasta el `save`.
 
 ```mermaid
 flowchart LR
@@ -78,7 +79,7 @@ Ningún paquete nuevo, migración, agente ni pantalla hasta que se abra la prime
 ### Fase 1 — Hogar, perfil, snapshots manuales
 
 - `feat/1-01-household-domain` — contratos y VOs de hogar / miembro.
-- `feat/1-02-household-persistence` — migraciones `households`, `household_members`, repos Eloquent.
+- `feat/1-02-household-persistence` — migraciones `households`, `household_members` (`id` bigint), repos Eloquent. `save` inserta y devuelve el agregado con el id de Postgres.
 - `feat/1-03-household-ui` — crear hogar, invitar por email, aceptar invitación.
 - `feat/1-04-profile-domain` — perfil, sexo, objetivo, hábitos, TDEE (solo fórmulas + tests).
 - `feat/1-05-profile-persistence` — migraciones `profiles`, `body_snapshots`.
@@ -128,7 +129,7 @@ Ningún paquete nuevo, migración, agente ni pantalla hasta que se abra la prime
 
 ## Modelo de datos (v1, sin compra ni presupuesto)
 
-- **households**, **household_members** (owner / member)
+- **households**, **household_members** (owner / member). PKs y FKs `bigint`, igual que `users`.
 - **profiles**: sexo, fecha de nacimiento, altura, actividad, deportes, objetivo, cadencia
 - **body_snapshots**: peso, IMC calculado, % opcionales, origen `manual | scale_ai`, fotos
 - **food_preferences**: include hogar; exclude persona
