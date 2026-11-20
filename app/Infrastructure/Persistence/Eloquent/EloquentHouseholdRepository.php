@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Eloquent;
 
 use App\Domain\Household\Contracts\HouseholdRepository;
+use App\Domain\Household\Exceptions\UserAlreadyInHousehold;
 use App\Domain\Household\MemberRole;
 use App\Domain\Household\ValueObjects\Household;
 use App\Domain\Household\ValueObjects\HouseholdId;
@@ -13,11 +14,21 @@ use App\Domain\Household\ValueObjects\HouseholdName;
 use App\Domain\Shared\ValueObjects\UserId;
 use App\Models\Household as HouseholdModel;
 use App\Models\HouseholdMember as HouseholdMemberModel;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 
 final class EloquentHouseholdRepository implements HouseholdRepository
 {
     public function save(Household $household): Household
+    {
+        try {
+            return $this->persist($household);
+        } catch (UniqueConstraintViolationException) {
+            throw new UserAlreadyInHousehold;
+        }
+    }
+
+    private function persist(Household $household): Household
     {
         return DB::transaction(function () use ($household): Household {
             if ($household->id === null) {

@@ -72,7 +72,7 @@
 
         <p class="mt-6 text-center text-sm text-stone-600">
             ¿Ya tienes cuenta?
-            <a href="{{ route('login') }}" class="font-medium text-emerald-700 hover:text-emerald-800">Iniciar sesión</a>
+            <a href="{{ route('login', array_filter(['email' => $email])) }}" class="font-medium text-emerald-700 hover:text-emerald-800">Iniciar sesión</a>
         </p>
     </article>
 </div>

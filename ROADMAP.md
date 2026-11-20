@@ -150,3 +150,12 @@ Laravel y Neuron crean tablas que **hoy no usa NutriSave** con Redis (`SESSION_D
 | `workflow_store` | Neuron | Vacía | ¿Workflows persistidos de Neuron, o solo jobs + `diet_plans`? Si lo segundo, dropear. |
 
 `users`, `password_reset_tokens` y `failed_jobs` se quedan. No mezclar este recorte con un PR de dominio o UI.
+
+## Anexo: correo (de cara a futuro)
+
+Fortify (reset de contraseña) e `feat/1-03-household-ui` (invitar por email) usan el mailer de Laravel. **No hay fase ni PR de “montar un servidor de correo”.**
+
+- **Local / v1 de desarrollo:** `MAIL_MAILER=log` (`.env.example`). El mensaje no sale a internet; queda en `storage/logs/laravel.log` (asunto, cuerpo, enlace de aceptar).
+- **Tests:** `MAIL_MAILER=array` (`phpunit.xml`) + `Notification::fake()`. Nada de SMTP en CI.
+- **Producción / staging (cuando alguien deba recibir el mail de verdad):** no un SMTP propio. Un proveedor (Resend, Amazon SES, Postmark, Mailgun o SMTP del host) y `MAIL_FROM_ADDRESS` de un dominio verificado. Solo cambiar `.env`; no mezclar con un PR de dominio o UI.
+- **Opcional en local:** Mailpit/Mailhog en el puerto `2525` del `.env.example` para ver el HTML. No es requisito de ninguna fase.

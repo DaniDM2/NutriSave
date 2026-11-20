@@ -26,6 +26,8 @@ class DashboardTest extends TestCase
             ->get(route('dashboard'))
             ->assertOk()
             ->assertSee('Inicio')
+            ->assertSee('Ir al hogar')
+            ->assertSee('Hogar')
             ->assertSee('Ada Lovelace')
             ->assertSee('Cerrar sesión')
             ->assertDontSee('Neuron AI')

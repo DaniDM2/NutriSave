@@ -21,6 +21,27 @@ class RegistrationTest extends TestCase
             ->assertSee('Crear cuenta');
     }
 
+    public function test_it_prefills_email_from_the_query_string(): void
+    {
+        $this->get(route('register', ['email' => 'carol@example.com']))
+            ->assertOk()
+            ->assertSee('carol@example.com');
+    }
+
+    public function test_it_redirects_to_the_intended_url_after_registering(): void
+    {
+        $this->withSession(['url.intended' => '/household']);
+
+        Livewire::test(Register::class)
+            ->set('name', 'Ada Lovelace')
+            ->set('email', 'ada@example.com')
+            ->set('password', 'password')
+            ->set('password_confirmation', 'password')
+            ->call('register')
+            ->assertHasNoErrors()
+            ->assertRedirect('/household');
+    }
+
     public function test_it_registers_a_new_user(): void
     {
         Livewire::test(Register::class)

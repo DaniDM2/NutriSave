@@ -22,6 +22,11 @@ class Login extends Component
 
     public bool $remember = false;
 
+    public function mount(): void
+    {
+        $this->email = request()->string('email')->toString();
+    }
+
     public function authenticate(): void
     {
         $this->validate([

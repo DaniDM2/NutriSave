@@ -21,6 +21,11 @@ class Register extends Component
 
     public string $password_confirmation = '';
 
+    public function mount(): void
+    {
+        $this->email = request()->string('email')->toString();
+    }
+
     public function register(CreatesNewUsers $creator): void
     {
         $user = $creator->create([
@@ -33,6 +38,6 @@ class Register extends Component
         Auth::login($user);
         Session::regenerate();
 
-        $this->redirect(config('fortify.home'), navigate: true);
+        $this->redirectIntended(default: config('fortify.home'), navigate: true);
     }
 }

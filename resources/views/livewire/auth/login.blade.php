@@ -53,7 +53,7 @@
         </p>
         <p class="mt-2 text-center text-sm text-stone-600">
             ¿No tienes cuenta?
-            <a href="{{ route('register') }}" class="font-medium text-emerald-700 hover:text-emerald-800">Crear cuenta</a>
+            <a href="{{ route('register', array_filter(['email' => $email])) }}" class="font-medium text-emerald-700 hover:text-emerald-800">Crear cuenta</a>
         </p>
     </article>
 </div>

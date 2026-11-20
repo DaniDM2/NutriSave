@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Persistence;
 
+use App\Domain\Household\Exceptions\UserAlreadyInHousehold;
 use App\Domain\Household\MemberRole;
 use App\Domain\Household\ValueObjects\Household;
 use App\Domain\Household\ValueObjects\HouseholdId;
@@ -11,7 +12,6 @@ use App\Domain\Household\ValueObjects\HouseholdName;
 use App\Domain\Shared\ValueObjects\UserId;
 use App\Infrastructure\Persistence\Eloquent\EloquentHouseholdRepository;
 use App\Models\User;
-use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -119,7 +119,7 @@ class EloquentHouseholdRepositoryTest extends TestCase
         $ownerId = new UserId((int) $owner->id);
         $this->repository()->save(Household::create(new HouseholdName('Casa Ada'), $ownerId));
 
-        $this->expectException(UniqueConstraintViolationException::class);
+        $this->expectException(UserAlreadyInHousehold::class);
 
         $this->repository()->save(Household::create(new HouseholdName('Casa Bob'), $ownerId));
     }

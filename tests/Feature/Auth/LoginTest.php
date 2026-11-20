@@ -21,6 +21,13 @@ class LoginTest extends TestCase
             ->assertSee('Iniciar sesión');
     }
 
+    public function test_it_prefills_email_from_the_query_string(): void
+    {
+        $this->get(route('login', ['email' => 'carol@example.com']))
+            ->assertOk()
+            ->assertSee('carol@example.com');
+    }
+
     public function test_it_authenticates_with_valid_credentials(): void
     {
         $user = User::factory()->create();
