@@ -7,12 +7,16 @@ use App\Domain\Household\Contracts\HouseholdInvitationNotifier;
 use App\Domain\Household\Contracts\HouseholdInvitationRepository;
 use App\Domain\Household\Contracts\HouseholdRepository;
 use App\Domain\Pdf\Contracts\PdfGenerator;
+use App\Domain\Profile\Contracts\BodySnapshotRepository;
+use App\Domain\Profile\Contracts\ProfileRepository;
 use App\Domain\Shared\Contracts\UserDirectory;
 use App\Infrastructure\Ai\NeuronAiAgent;
 use App\Infrastructure\Mail\LaravelHouseholdInvitationNotifier;
 use App\Infrastructure\Pdf\DomPdfGenerator;
+use App\Infrastructure\Persistence\Eloquent\EloquentBodySnapshotRepository;
 use App\Infrastructure\Persistence\Eloquent\EloquentHouseholdInvitationRepository;
 use App\Infrastructure\Persistence\Eloquent\EloquentHouseholdRepository;
+use App\Infrastructure\Persistence\Eloquent\EloquentProfileRepository;
 use App\Infrastructure\Persistence\Eloquent\EloquentUserDirectory;
 use Tests\TestCase;
 
@@ -31,6 +35,11 @@ class OnionBindingsTest extends TestCase
         $this->assertInstanceOf(
             LaravelHouseholdInvitationNotifier::class,
             $this->app->make(HouseholdInvitationNotifier::class),
+        );
+        $this->assertInstanceOf(EloquentProfileRepository::class, $this->app->make(ProfileRepository::class));
+        $this->assertInstanceOf(
+            EloquentBodySnapshotRepository::class,
+            $this->app->make(BodySnapshotRepository::class),
         );
     }
 }
