@@ -2,7 +2,7 @@
 
 Documento de producto y de entrega. **No es una guía de implementación en curso:** el código de cada fase se hace después, en una rama y un PR según el desglose de abajo.
 
-El repo es un esqueleto Laravel 12 (onion, Livewire 4, Neuron AI, DOMPDF, Horizon, PostgreSQL). Aún no hay auth, perfil, hogares ni dominio de dietas.
+El repo es Laravel 12 (onion, Livewire 4, Neuron AI, DOMPDF, Horizon, PostgreSQL). Auth, hogar y persistencia de perfil/snapshots ya están; faltan la UI de perfil, dietas y el resto de fases.
 
 ## Fuera de alcance (v1)
 
@@ -83,7 +83,7 @@ Ningún paquete nuevo, migración, agente ni pantalla hasta que se abra la prime
 - `feat/1-03-household-ui` — crear hogar, invitar por email, aceptar invitación.
 - `feat/1-04-profile-domain` — perfil, sexo, objetivo, hábitos, TDEE (solo fórmulas + tests).
 - `feat/1-05-profile-persistence` — migraciones `profiles`, `body_snapshots`.
-- `feat/1-06-profile-ui` — formulario obligatorio; bloquear “generar dieta” si falta.
+- `feat/1-06-profile-ui` — formulario crear/editar (sexo, nacimiento, altura, actividad, deportes, objetivo, cadencia; **sin peso**). Dashboard: aviso + botón “Generar dieta” deshabilitado si falta el perfil. El veto real al generar queda en `feat/4-05`.
 - `feat/1-07-snapshot-ui` — registro manual de peso y composición.
 - `feat/1-08-snapshot-cadence` — cadencia 7/14/30 y aviso de snapshot caducado (scheduler).
 
