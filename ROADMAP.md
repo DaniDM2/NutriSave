@@ -2,7 +2,7 @@
 
 Documento de producto y de entrega. **No es una guía de implementación en curso:** el código de cada fase se hace después, en una rama y un PR según el desglose de abajo.
 
-El repo es Laravel 12 (onion, Livewire 4, Neuron AI, DOMPDF, Horizon, PostgreSQL). Auth, hogar y persistencia de perfil/snapshots ya están; faltan la UI de perfil, dietas y el resto de fases.
+El repo es Laravel 12 (onion, Livewire 4, Neuron AI, DOMPDF, Horizon, PostgreSQL). Auth, hogar, perfil y snapshots manuales ya están; faltan dietas y el resto de fases.
 
 ## Fuera de alcance (v1)
 
@@ -84,8 +84,7 @@ Ningún paquete nuevo, migración, agente ni pantalla hasta que se abra la prime
 - `feat/1-04-profile-domain` — perfil, sexo, objetivo, hábitos, TDEE (solo fórmulas + tests).
 - `feat/1-05-profile-persistence` — migraciones `profiles`, `body_snapshots`.
 - `feat/1-06-profile-ui` — formulario crear/editar (sexo, nacimiento, altura, actividad, deportes, objetivo, cadencia; **sin peso**). Dashboard: aviso + botón “Generar dieta” deshabilitado si falta el perfil. El veto real al generar queda en `feat/4-05`.
-- `feat/1-07-snapshot-ui` — registro manual de peso y composición.
-- `feat/1-08-snapshot-cadence` — cadencia 7/14/30 y aviso de snapshot caducado (scheduler).
+- `feat/1-07-snapshot-ui` — registro manual de peso y composición; aviso **in-app** de snapshot caducado (cadencia 7/14/30). Recordatorio por email/cron fuera de v1.
 
 ### Fase 2 — Visión de báscula
 
@@ -126,6 +125,7 @@ Ningún paquete nuevo, migración, agente ni pantalla hasta que se abra la prime
 - Lista de la compra agregada del hogar
 - Presupuesto semanal como guía para Gemini
 - Descarga PDF individual por miembro (si se echa en falta)
+- Recordatorio por email/cron de snapshot caducado (el aviso in-app está en `feat/1-07-snapshot-ui`)
 
 ## Modelo de datos (v1, sin compra ni presupuesto)
 

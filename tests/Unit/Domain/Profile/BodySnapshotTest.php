@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Profile;
 
 use App\Domain\Profile\Exceptions\InvalidPhotoPath;
+use App\Domain\Profile\SnapshotCadence;
 use App\Domain\Profile\SnapshotOrigin;
 use App\Domain\Profile\ValueObjects\BodyMassIndex;
 use App\Domain\Profile\ValueObjects\BodySnapshot;
@@ -72,6 +73,40 @@ class BodySnapshotTest extends TestCase
         $this->expectException(InvalidPhotoPath::class);
 
         $this->snapshot(photoPaths: ['   ']);
+    }
+
+    public function test_it_is_fresh_before_the_cadence_elapses(): void
+    {
+        $snapshot = $this->snapshot();
+
+        $this->assertFalse($snapshot->isStale(
+            SnapshotCadence::Weekly,
+            new DateTimeImmutable('2026-11-30 09:59:59'),
+        ));
+    }
+
+    public function test_it_is_stale_when_the_cadence_elapses(): void
+    {
+        $snapshot = $this->snapshot();
+
+        $this->assertTrue($snapshot->isStale(
+            SnapshotCadence::Weekly,
+            new DateTimeImmutable('2026-11-30 10:00:00'),
+        ));
+    }
+
+    public function test_it_uses_the_profile_cadence_in_days(): void
+    {
+        $snapshot = $this->snapshot();
+
+        $this->assertFalse($snapshot->isStale(
+            SnapshotCadence::Biweekly,
+            new DateTimeImmutable('2026-12-07 09:59:59'),
+        ));
+        $this->assertTrue($snapshot->isStale(
+            SnapshotCadence::Biweekly,
+            new DateTimeImmutable('2026-12-07 10:00:00'),
+        ));
     }
 
     /**

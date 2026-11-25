@@ -23,6 +23,9 @@
                         <a href="{{ route('profile') }}" class="text-sm font-medium text-stone-600 hover:text-stone-900">
                             Perfil
                         </a>
+                        <a href="{{ route('snapshots') }}" class="text-sm font-medium text-stone-600 hover:text-stone-900">
+                            Peso
+                        </a>
                     </div>
                     <div class="flex items-center gap-4">
                         <span class="text-sm text-stone-700">{{ auth()->user()->name }}</span>

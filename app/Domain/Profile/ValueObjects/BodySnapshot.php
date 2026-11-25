@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Profile\ValueObjects;
 
 use App\Domain\Profile\Exceptions\InvalidPhotoPath;
+use App\Domain\Profile\SnapshotCadence;
 use App\Domain\Profile\SnapshotOrigin;
 use App\Domain\Shared\ValueObjects\UserId;
 use DateTimeImmutable;
@@ -70,6 +71,11 @@ final readonly class BodySnapshot
             $this->photoPaths,
             $id,
         );
+    }
+
+    public function isStale(SnapshotCadence $cadence, DateTimeImmutable $now): bool
+    {
+        return $this->recordedAt->modify('+'.$cadence->value.' days') <= $now;
     }
 
     private function assertPhotoPaths(): void

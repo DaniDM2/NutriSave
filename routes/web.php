@@ -8,12 +8,14 @@ use App\Livewire\Dashboard;
 use App\Livewire\Household\AcceptInvitation;
 use App\Livewire\Household\ManageHousehold;
 use App\Livewire\Profile\ManageProfile;
+use App\Livewire\Profile\ManageSnapshots;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::livewire('/', Dashboard::class)->name('dashboard');
     Route::livewire('/household', ManageHousehold::class)->name('household');
     Route::livewire('/profile', ManageProfile::class)->name('profile');
+    Route::livewire('/snapshots', ManageSnapshots::class)->name('snapshots');
 });
 
 Route::livewire('/invitations/{token}', AcceptInvitation::class)->name('household.invitations.accept');
